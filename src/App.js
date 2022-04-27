@@ -1,23 +1,40 @@
 import logo from './logo.svg';
 import './App.css';
+import { ethers } from 'ethers';
+import { useState } from 'react';
+import Web3 from 'web3';
+import Web3Modal from 'web3modal';
+import WalletConnect from "@walletconnect/web3-provider";
+
+export const providerOptions = {
+ walletconnect: {
+   package: WalletConnect, 
+   options: {
+     infuraId: "4badaf12963a4dd28d67d5a57e71a75f" 
+   }
+ }
+};
+
+const web3Modal = new Web3Modal({
+  providerOptions // required
+});
 
 function App() {
+  const [provider, setProvider] = useState();
+  const [library, setLibrary] = useState();
+
+  const connectWallet = async () => {
+    try {
+      const provider = await web3Modal.connect();
+      window.web3 = new Web3(provider);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+       <button onClick={connectWallet}>Connect Wallet</button>  
     </div>
   );
 }
